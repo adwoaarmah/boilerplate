@@ -1,14 +1,24 @@
-// Since we will be making use of 3rd party functions (eg. navigator.geolocation.getCurrentPosition) which are not native javascript functions we will need
-// to add this function to the list of native javascript functions to allow javascript identify and execute it each time its called.
-// This is done by using the addEventListener() function.
-//
-document.addEventListener("deviceready", onDeviceReady, false);
+//document.addEventListener("deviceready", onDeviceReady, false);
 
+var map;
+var showInfo;
 
-//We decide to create a function to handle the 3rd party functions (eg. navigator.geolocation.getCurrentPosition)
-// which we earlier added to the native functions of the javascript
-function onDeviceReady() {
+function initMap() {
+    var uluru = {lat: 7.9465, lng: 1.0232};
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 6,
+        center: uluru
+    });
+}
+
+function locateButton() {
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
+}
+
+
+function errorlocation(browserHasGeolocation, showInfo, pos) {
+    showInfo.setPosition(pos);
+    showInfo.open(map);
 }
 
 // onSuccess Geolocation
@@ -16,19 +26,21 @@ function onDeviceReady() {
 function onSuccess(position) {
 
     var element = document.getElementById('geolocation');
-    element.innerHTML = 'Latitude: ' + position.coords.latitude  + '<br />' +
-        'Longitude: '          + position.coords.longitude             + '<br />' +
-        'Altitude: '           + position.coords.altitude              + '<br />' +
-        'Accuracy: '           + position.coords.accuracy              + '<br />' +
-        'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-        'Heading: '            + position.coords.heading               + '<br />' +
-        'Speed: '              + position.coords.speed                 + '<br />' +
-        'Timestamp: '          + position.timestamp          + '<br />';
+    
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    
+    var geolocation = {lat: latitude, lng: longitude};
+    
+    var marker = new google.maps.Marker({
+        position: geolocation,
+        map: map
+    });
+    map.setCenter(geolocation);
 }
 
 // onError Callback receives a PositionError object
 //
 function onError(error) {
-    alert('code: '    + error.code    + '\n' +
-        'message: ' + error.message + '\n');
+    alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 }
