@@ -1,8 +1,10 @@
 //document.addEventListener("deviceready", onDeviceReady, false);
+//Referenced the Google API website
 
 var map;
 var showInfo;
 
+//load map to screen
 function initMap() {
     var uluru = {lat: 7.9465, lng: 1.0232};
     map = new google.maps.Map(document.getElementById('map'), {
@@ -10,7 +12,7 @@ function initMap() {
         center: uluru
     });
 }
-
+//locate when button is clicked
 function locateButton() {
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
 }
